@@ -79,6 +79,10 @@ def train_mode(task_name, resize_size_list, model_name="lenet", batch_size=32, t
     start_time = time.time()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(device)
+    if not os.path.exists(f"../model/"):
+        os.mkdir(f"../model/")
+    if not os.path.exists(f"../model/{task_name}/"):
+        os.mkdir(f"../model/{task_name}/")
     if model_name.lower() == "lenet":
         model = LeNet()
         model_path = f"../model/{task_name}/lenet.pth"
@@ -168,11 +172,6 @@ def train_mode(task_name, resize_size_list, model_name="lenet", batch_size=32, t
         predicted = torch.max(prediction.data, 1)[1]
         correct += (predicted == batch_label).sum()
     print(f"Testing accuracy: {(correct / (test_size*data_num))}")
-
-    if not os.path.exists(f"../model/"):
-        os.mkdir(f"../model/")
-    if not os.path.exists(f"../model/{task_name}/"):
-        os.mkdir(f"../model/{task_name}/")
 
     torch.save(obj=model.state_dict(), f=f"../model/{task_name}/{model_name.lower()}.pth")
     
